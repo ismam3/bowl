@@ -1,0 +1,124 @@
+<html>
+    <head>
+        <script src="a-frame_0_8_2.min.js"></script>
+    <script src="aframe-extras.min.js"></script>
+    <script src="aframe-physics-system.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cannon.js/0.6.2/cannon.min.js"></script>
+        <script>
+            function mouseEnter(key_code){
+                var keyDownEvent = new KeyboardEvent("keydown",{
+                    keyCode:key_code
+                })
+                window.dispatchEvent(keyDownEvent)
+            }
+            function mouseLeave(key_code){
+                var keyUpEvent = new KeyboardEvent("keyup",{
+                    keyCode:key_code
+                })
+                window.dispatchEvent(keyUpEvent)
+            }
+          </script>
+          <!-- <link rel="shortcut icon" href="./Bncc_logo.png" type="image/x-icon">
+          <link rel="manifest" href="manifest.json"> -->
+        <title>Ball rolling</title>
+        <style>
+            .controller{
+                position: fixed;
+                width: 70px;
+                height: 70px;
+                z-index: 3;
+                background: transparent;
+                color: black;
+                font-size: 42px;
+                font-weight: 900;
+                border:1px black inset;
+                border-radius: 25px;
+                text-align: center;
+                vertical-align: middle;
+            }
+            .controller:hover{
+                background: whitesmoke;
+            }
+            #forward{
+                left: calc(50vw - 35px);
+                top: 0;
+            }
+            #left{
+                left: 0;
+                top: calc(50vh - 35px);
+            }
+            #backward{
+                left:calc(50vw - 35px);
+                bottom: 0;
+            }
+            #right{
+                right: 0;
+                top: calc(50vh - 35px);
+            }
+        </style>
+    </head>
+    <body style="user-select: none; -webkit-app-region:drag;">
+        <script>
+            AFRAME.registerComponent("ball",{
+                init:function (){
+                    let el = this.el;
+                    el.addEventListener("click",()=>{
+                        let position = el.getAttribute("position");
+                        let object_position = new THREE.Vector3(position.x,position.y,position.z);
+                        el.body.applyImpulse(
+                            new CANNON.Vec3(0,0,-8),
+                            new CANNON.Vec3().copy(object_position)
+                        )
+                    })
+                }
+            })
+        </script>
+
+        <a-scene id="myScene">
+            <!-- <div class="controller" id="forward" onmouseenter="mouseEnter(87)" onmouseleave="mouseLeave(87)">&uarr;</div>
+            <div class="controller" id="left" onmouseenter="mouseEnter(65)" onmouseleave="mouseLeave(65)">&larr;</div>
+            <div class="controller" id="backward" onmouseenter="mouseEnter(83)" onmouseleave="mouseLeave(83)">&darr;</div>
+            <div class="controller" id="right" onmouseenter="mouseEnter(68)" onmouseleave="mouseLeave(68)">&rarr;</div> -->
+            <a-camera id="myCamera">
+                <a-cursor intersection-spawn="Event:click;mixin:voxel"></a-cursor>
+            </a-camera>
+            <!-- assets -->
+            <a-assets>
+                <img id="grass_texture" src="textures/grass(1).jpg">
+                <img id="sky_texture" src="textures/clear_sky.jpeg">
+                <img id="concrete_texture" src="textures/concrete_texture.jpg">
+                <img id="white_marbel" src="textures/white_marbel_tiles.jpg">
+                <img id="surface-tile" src="textures/surface-tile.jpg">
+            </a-assets>
+
+            <!-- sky -->
+            <a-sky src="#sky_texture"></a-sky>
+            <!-- plane -->
+            <a-plane static-body rotation="-90 0 0" material="src:#white_marbel;repeat:500 500" scale="1000 1000 0" position="0 0 0"></a-plane>
+
+            <!-- runway -->
+            <a-box color="gray" height="0.1" width="1" depth="8" position="0 0 -8"></a-box>
+            <!-- ball -->
+            <a-sphere dynamic-body="mass:2" ball color="black" radius="0.3" position="0 0.3 -4"></a-sphere>
+            <!-- targets -->
+            <a-cylinder dynamic-body="mass:.3" color="white" height="0.5" radius="0.1" position="0.40 0.25 -12"></a-cylinder>
+            <a-cylinder dynamic-body="mass:.3" color="white" height="0.5" radius="0.1" position="0.30 0.25 -12"></a-cylinder>
+            <a-cylinder dynamic-body="mass:.3" color="white" height="0.5" radius="0.1" position="0.20 0.25 -12"></a-cylinder>
+            <a-cylinder dynamic-body="mass:.3" color="white" height="0.5" radius="0.1" position="0 0.25 -12"></a-cylinder>
+            <a-cylinder dynamic-body="mass:.3" color="white" height="0.5" radius="0.1" position="-.15 0.25 -12"></a-cylinder>
+            <a-cylinder dynamic-body="mass:.3" color="white" height="0.5" radius="0.1" position="-0.30 0.25 -12"></a-cylinder>
+
+            <!-- walls -->
+            <a-box static-body position="0 3 -16" src="#surface-tile" depth="0.5" width="20" height="6"></a-box>
+            <a-box static-body position="10 3 -6" src="#surface-tile" depth="0.5" width="20" height="6" rotation="0 90 0"></a-box>
+            <a-box static-body position="-10 3 -6" src="#surface-tile" depth="0.5" width="20" height="6" rotation="0 90 0"></a-box>
+            <a-box static-body position="0 3 4" src="#surface-tile" depth="0.5" width="20" height="6"></a-box>
+
+            <!-- roof -->
+            <a-box static-body position="0 6 -6" src="#concrete_texture" depth="0.5" width="20" height="20" rotation="90 0 0"></a-box>
+
+        </a-scene>
+        <script src="https://www.codechangers.com/lessons/vr/aframe/shoot.js"></script>
+        <script src="https://www.codechangers.com/lessons/vr/aframe/vr.js"></script>
+    </body>
+</html>
